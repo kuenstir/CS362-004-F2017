@@ -1,0 +1,7 @@
+Exception: STATUS_ACCESS_VIOLATION at eip=6115CCD9
+eax=611BEE20 ebx=0063CC9C ecx=00000000 edx=00000000 esi=00000001 edi=611D7DAE
+ebp=00000000 esp=00636400 program=C:\users\r\desktop\clonedschoolrepo\CS362-004-F2017\dominion\player.exe, pid 24428, thread main
+cs=0023 ds=002B es=002B fs=0053 gs=002B ss=002B
+Stack trace:
+Frame     Function  Args
+End of stack trace

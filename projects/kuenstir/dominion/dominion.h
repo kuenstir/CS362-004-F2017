@@ -85,7 +85,7 @@ int initializeGame(int numPlayers, int kingdomCards[10], int randomSeed,
 		   struct gameState *state);
 /* Responsible for initializing all supplies, and shuffling deck and
    drawing starting hands for all players.  Check that 10 cards selected
-   are in fact (different) kingdom cards, and that numPlayers is valid. 
+   are in fact (different) kingdom cards, and that numPlayers is valid.
 
 Cards not in game should initialize supply position to -1 */
 
@@ -117,6 +117,16 @@ int whoseTurn(struct gameState *state);
 int endTurn(struct gameState *state);
 /* Must do phase C and advance to next player; do not advance whose turn
    if game is over */
+
+int adventurerFunc(int currentPlayer, struct gameState *state);
+
+int sea_hagFunc(int currentPlayer, struct gameState *state);
+
+int smithyFunc(int currentPlayer, struct gameState *state);
+
+int outpostFunc(int currentPlayer, struct gameState *state);
+
+int great_hallFunc(int currentPlayer, struct gameState *state);
 
 int isGameOver(struct gameState *state);
 
