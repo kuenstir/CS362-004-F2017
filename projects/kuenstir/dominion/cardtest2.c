@@ -1,5 +1,5 @@
 //card test 2
-//Test of Adventurer card
+//Test of Adventurer Card
 
 #include "dominion.h"
 #include "dominion_helpers.h"
@@ -11,20 +11,8 @@
 
 #define CARD_UNDER_TEST "ADVENTURER"
 
-//Set up game variables
-int setup(){
-	int i, j, m;
-	int handpos = 0, choice1 = 0, choice2 = 0, choice3 = 0, bonus = 0;
-	int seed = 555;
-	//int seed = (rand() % 20)+1;
-	int numPlayers = 2;
-	struct gameState Game, pre;
-	int k[10] = {adventurer, smithy, embargo, village, minion, mine, cutpurse,
-				sea_hag, outpost, great_hall};
-}
-
-void assert(int testResult, int expected,  char* resultString) {
-  if(testTesult == expected) {
+int testAssert(int result, int expected,  char* resultString) {
+  if(result >= expected) {
     printf("PASS: %s\n", resultString);
 	return 0;
   } 
@@ -38,17 +26,53 @@ void assert(int testResult, int expected,  char* resultString) {
 int main() {
 	printf("\n\n*** CARDTEST - %s ***\n\n", CARD_UNDER_TEST);
   
-	setup();
+	struct gameState G, otherG;
+	
+	int card, choice1, choice2, choice3, handPos;
+	 int kingdom[10] = {adventurer, smithy, embargo, village, minion, mine, cutpurse,
+				sea_hag, outpost, great_hall};
+	int players = 2;
+	int seed = 589;
   
-	//initialize a new game
-	initializeGame(numPlayers, k, seed, &Game);
+	initializeGame(players, kingdom, seed, &G);
+
+	int bonus = 0;
+	
+	cardEffect(card, choice1, choice2, choice3, &G, handPos, &bonus);
+  
+	G.whoseTurn = 1;
+
+	// add card under test
+	G.hand[1][5]=adventurer;
+	G.handCount[1]++;
+	int storeHandCount = G.handCount[1];
+	
+	memcpy(&otherG, &G, sizeof(struct gameState));
+	cardEffect(adventurer, choice1, choice2, choice3, &G, 5, &bonus);
+	
+	if(testAssert(G.handCount[1], storeHandCount + 1, "Adventurer added cards to the player hand")){
+	}
 	
 	// add card under test
-	G.hand[p][5]=adventurer;
-	G.handCount[p]++;
+	G.hand[1][5]=adventurer;
+	G.handCount[1]++;
+	storeHandCount = G.handCount[1];
 	
-	memcpy(&pre, &Game, sizeof(struct gameState));
-	cardEffect(smithy, choice1, choice2, choice3, &Game, 5, &bonus);
-
+	memcpy(&otherG, &G, sizeof(struct gameState));
+	cardEffect(adventurer, choice1, choice2, choice3, &G, 5, &bonus);
+	
+	if(testAssert(G.handCount[1], storeHandCount + 1, "Adventurer added cards to the player hand")){
+	}
+	
+	// add card under test
+	G.hand[1][5]=adventurer;
+	G.handCount[1]++;
+	storeHandCount = G.handCount[1];
+	
+	memcpy(&otherG, &G, sizeof(struct gameState));
+	cardEffect(adventurer, choice1, choice2, choice3, &G, 5, &bonus);
+	
+	if(testAssert(G.handCount[1], storeHandCount + 1, "Adventurer added cards to the player hand")){
+	}
 	return 0;
 }
