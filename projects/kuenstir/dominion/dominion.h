@@ -130,6 +130,8 @@ int great_hallFunc(int currentPlayer, struct gameState *state);
 
 int isGameOver(struct gameState *state);
 
+int getCost(int cardNumber);
+
 int scoreFor(int player, struct gameState *state);
 /* Negative here does not mean invalid; scores may be negative,
    -9999 means invalid input */
