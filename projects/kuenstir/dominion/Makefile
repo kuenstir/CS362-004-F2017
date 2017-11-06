@@ -22,9 +22,15 @@ testAll: dominion.o testSuite.c
 	gcc -o testSuite testSuite.c -g  dominion.o rngs.o $(CFLAGS)
 	
 result: runRandTests
-	./randTest1 &> testresults.out
-	./randTest2 >> testresults.out
-	./advTest3 >> testresults.out
+	./randTest1 &> randomtestcard1.out
+	./randTest2 >> randomtestcard2.out
+	./advTest3 >> randomtestadventurer.out
+	gcov dominion.c >> randomtestcard1.out
+	cat dominion.c.gcov >> randomtestcard1.out
+	gcov dominion.c >> randomtestcard2.out
+	cat dominion.c.gcov >> randomtestcard2.out
+	gcov dominion.c >> randomtestadventurer.out
+	cat dominion.c.gcov >> randomtestadventurer.out
 
 runRandTests: randTests
 	./randTest1 
