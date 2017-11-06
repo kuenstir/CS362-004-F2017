@@ -20,14 +20,29 @@ testBuyCard: testDrawCard.c dominion.o rngs.o
 
 testAll: dominion.o testSuite.c
 	gcc -o testSuite testSuite.c -g  dominion.o rngs.o $(CFLAGS)
+	
+result: runRandTests
+	./randTest1 &> testresults.out
+	./randTest2 >> testresults.out
+	./advTest3 >> testresults.out
+
+runRandTests: randTests
+	./randTest1 
+	./randTest2
+	./advTest3
+
+randTests:
+	gcc -fprofile-arcs -ftest-coverage -Wall -std=c99 dominion.o randomtestcard1.c rngs.o -o randTest1 -lm -g
+	gcc -fprofile-arcs -ftest-coverage -Wall -std=c99 dominion.o randomtestcard2.c rngs.o -o randTest2 -lm -g
+	gcc -fprofile-arcs -ftest-coverage -Wall -std=c99 dominion.o randomtestadventurer.c rngs.o -o advTest3 -lm -g
 
 interface.o: interface.h interface.c
 	gcc -c interface.c -g  $(CFLAGS)
 
 runtests: testDrawCard 
-	./testDrawCard &> unittestresult.out
-	gcov dominion.c >> unittestresult.out
-	cat dominion.c.gcov >> unittestresult.out
+	./testDrawCard &> testresults.out
+	gcov dominion.c >> testresults.out
+	cat dominion.c.gcov >> testresults.out
 
 
 player: player.c interface.o
