@@ -21,16 +21,32 @@ testBuyCard: testDrawCard.c dominion.o rngs.o
 testAll: dominion.o testSuite.c
 	gcc -o testSuite testSuite.c -g  dominion.o rngs.o $(CFLAGS)
 	
-result: runRandTests
+randomtestadventurer.out: randomtestadventurer.c dominion.o rngs.o
+	gcc -fprofile-arcs -ftest-coverage -Wall -std=c99 dominion.o randomtestadventurer.c rngs.o -o randomtestadventurer -lm -g
+	randomtestadventurer > randomtestadventurer.out
+	gcov -b -f dominion.c >> randomtestadventurer.out
+
+randomtestcard1.out: randomtestcard1.c dominion.o rngs.o
+	gcc -fprofile-arcs -ftest-coverage -Wall -std=c99 dominion.o randomtestcard1.c rngs.o -o randomtestcard1 -lm -g
+	randomtestcard1 > randomtestcard1.out
+	gcov -b -f dominion.c >> randomtestcard1.out
+
+randomtestcard2.out: randomtestcard2.c dominion.o rngs.o
+	gcc -fprofile-arcs -ftest-coverage -Wall -std=c99 dominion.o randomtestcard2.c rngs.o -o randomtestcard2 -lm -g
+	randomtestcard2 > randomtestcard2.out
+	gcov -b -f dominion.c >> randomtestcard2.out 
+	
+	
+total: runRandTests
 	./randTest1 &> randomtestcard1.out
 	./randTest2 >> randomtestcard2.out
 	./advTest3 >> randomtestadventurer.out
-	gcov dominion.c >> randomtestcard1.out
-	cat dominion.c.gcov >> randomtestcard1.out
-	gcov dominion.c >> randomtestcard2.out
-	cat dominion.c.gcov >> randomtestcard2.out
-	gcov dominion.c >> randomtestadventurer.out
-	cat dominion.c.gcov >> randomtestadventurer.out
+	gcov randomtestcard1.c - >> randomtestcard1.out
+	cat randomtestcard1.gcov >> randomtestcard1.out
+	gcov randomtestcard2.c >> randomtestcard2.out
+	cat randomtestcard2.gcov >> randomtestcard2.out
+	gcov randomtestadventurer.c >> randomtestadventurer.out
+	cat andomtestadventurer.gcov >> randomtestadventurer.out
 
 runRandTests: randTests
 	./randTest1 
