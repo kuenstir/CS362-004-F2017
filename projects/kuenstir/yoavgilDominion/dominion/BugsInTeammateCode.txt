@@ -1,0 +1,33 @@
+Bug-Reports
+1.	Adventurer
+•	I uncovered bugs in Yoav’s Adventurer implementation in both my random tests and in my card tests. For the random test, the only information that was returned is that the Adventurer card did not do its job of allowing the player to mine for 2 treasure before ending their turn. For the card test, the information returned was that the Adventurer card actually didn’t increment the player’s hand by the correct number of cards in 1 out of three tests.
+•	Yoav’s CallAdventurer function helps identify the root cause of the bug:
+He begins by setting drawntreasure == 0 at the start of the turn, then uses a condition in his while loop that allows the loop to keep running as long as drawntreasure < 4. An adventurer card is only supposed to let a player keep drawing until they have found two pieces of treasure, and this discrepancy accounts for the errors found in both tests.
+	while(drawntreasure<4){
+		if (state->deckCount[currentPlayer] <1){//if the deck is empty we need to shuffle discard and add to deck
+			shuffle(currentPlayer, state);
+		}
+		drawCard(currentPlayer, state);
+		cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer]-1];//top card of hand is most recently drawn card.
+		if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
+			drawntreasure++;
+
+2.	Smithy
+•	The Smithy card only turned up a failure in one test, the card test, and the bug was subtle in that it only occurred in one out of three runs of the test. According to the test output, the problem was that the Smithy card, which should increment the player hand by three, only incremented the player hand by 2 on the final test run.
+•	When I looked at Yoav’s CallSmithy function, the cause of the discrepancy seems to be the discard statement being called at the end of the callSmithy turn:
+int callSmithy(struct gameState *state, int handPos) {
+	//+3 Cards
+	int i;
+	int currentPlayer = whoseTurn(state);
+
+	for (i = 0; i < 4; i++)
+	{
+		drawCard(currentPlayer, state);
+	}
+The code does correctly increment the hand by three drawn cards on the smithy turn, but that statement is followed by the following discard statement:
+
+	//discard card from hand
+	discardCard(handPos, currentPlayer, state, 0);
+	return 0;
+}
+It’s possible that there is something wrong with the handpost variable being passed in at the beginning of the callSmithy function, or it’s possible that there is a bug in the test itself that is causing it to look like the wrong number of cards have been added to the hand for the final test.
