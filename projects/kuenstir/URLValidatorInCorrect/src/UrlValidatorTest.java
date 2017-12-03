@@ -306,14 +306,67 @@ public class UrlValidatorTest extends TestCase {
 	   }
   }
    
-   
    public void testIsValid()
    {
-	   for(int i = 0;i<10000;i++)
-	   {
+	   UrlValidator val = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
+	   
+	   for (int scheme = 0; scheme < schemeArray.length; scheme++) {
+		   for (int authority = 0; authority < authorityArray.length; authority++) {
+			   for (int path = 0; path < pathArray.length; path++) {
+				   for (int query = 0; query < queryArray.length; query++) {
+					   for (int fragment = 0; fragment < fragmentArray.length; fragment++) {
+						   
+						   String url = schemeArray[scheme].item + authorityArray[authority].item +
+								        pathArray[path].item + queryArray[query].item + fragmentArray[fragment].item;
+						   
+						   boolean expected = schemeArray[scheme].valid && authorityArray[authority].valid &&
+							        pathArray[path].valid && queryArray[query].valid && fragmentArray[fragment].valid;
+						   
+						   boolean result = val.isValid(url);
+						   
+						   /*
+						    * The "assertEquals" statement causes the test to stop after the first failure.
+						    * Instead, use the "if" statement to print all failing tests to the console.
+						    */
+						   
+						   //if (expected != result) System.out.println(url);
+						   assertEquals(url, expected, result);
+					   }
+				   }
+			   }
+		   }
 		   
-	   }
+	   }	   
    }
+   
+   ResultPair[] schemeArray = {new ResultPair("http://", true),
+		                  new ResultPair("", true),
+		                  new ResultPair("ftp://", true),
+		                  new ResultPair("://", false),
+		                  new ResultPair("http", false)
+   };
+		   
+   ResultPair[] authorityArray = {new ResultPair("www.google.com", true),
+		                     new ResultPair("wikipedia.org", true),
+		                     new ResultPair("google.ca", true),
+		                     new ResultPair("google.com:1", true),
+		                     new ResultPair("", false),
+		                     new ResultPair(".", false)
+   };
+
+	ResultPair[] pathArray = {new ResultPair("/path", true),
+			             new ResultPair("", true)
+	};
+	
+	ResultPair[] queryArray = {new ResultPair("?query", true),
+			              new ResultPair("", true)
+			
+	};
+	
+	ResultPair[] fragmentArray = {new ResultPair("#fragment", true),
+			                 new ResultPair("", true)
+			
+	};
    
    public void testAnyOtherUnitTest()
    {
@@ -328,3 +381,4 @@ public class UrlValidatorTest extends TestCase {
    
 
 }
+
